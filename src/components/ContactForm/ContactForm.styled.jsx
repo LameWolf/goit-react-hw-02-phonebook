@@ -1,7 +1,7 @@
 import s from 'styled-components';
 
 export const Form = s.form`
-width: 400px;
+width: 465px;
 padding: 40px;
 border: 1px solid black;
 border-radius: 10px;
