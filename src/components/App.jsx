@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
+import PropTypes from 'prop-types';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 import { MainTitle, Contacts } from './App.styled';
 
 export class App extends Component {
+  static defaultProps = {
+    contacts: [],
+    filter: '',
+  };
+
+  static propTypes = {
+    contacts: PropTypes.array.isRequired,
+    filter: PropTypes.string.isRequired,
+  };
+
   state = {
     contacts: [],
     filter: '',
   };
 
-  nameInputId = nanoid();
-  numberInputId = nanoid();
-
-  handleChange = evt => {
-    const { name, value } = evt.target;
-    this.setState({ [name]: value });
-  };
-
-  addNewContact = (name, number) => {
-    const isExist = this.state.contacts.some(contact => contact.name === name);
+  addNewContact = ({ name, number }) => {
+    const isExist = this.state.contacts.find(contact => contact.name === name);
 
     if (isExist) {
       alert(`${name} is already in contacts.`);
@@ -38,16 +41,9 @@ export class App extends Component {
       return;
     }
 
-    this.setState(
-      ({ contacts }) => ({
-        contacts: [newContact, ...contacts],
-      }),
-      () => {
-        console.log(this.state);
-      }
-    );
-
-    this.reset();
+    this.setState(({ contacts }) => ({
+      contacts: [newContact, ...contacts],
+    }));
   };
 
   deleteContact = contactId => {
@@ -69,10 +65,6 @@ export class App extends Component {
     );
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
-  };
-
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
@@ -92,3 +84,8 @@ export class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  filter: PropTypes.string.isRequired,
+};
